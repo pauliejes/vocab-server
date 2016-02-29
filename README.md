@@ -43,7 +43,7 @@
 
 **Setup the project**
 
-    (env)admin:$ fab setup_project
+    (env)admin:$ fab -f fabcommands.py setup_project
     ...
     You just installed Django's auth system, which means you don't have any superusers defined.
 	Would you like to create one now? (yes/no): yes
@@ -56,6 +56,6 @@
 
 ## Starting
 
-While still in the VOCAB_SITE directory, run
+While in the VOCAB_SITE directory, run
 
     (env)admin:$ python manage.py runserver
