@@ -15,7 +15,7 @@ from os.path import dirname, abspath
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
-PROJECT_DIR = dirname(dirname(dirname(abspath(__file__))))
+PROJECT_DIR = dirname(dirname(dirname(dirname(abspath(__file__)))))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'vocab',
+    'jsonify',
+    'el_pagination',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -97,9 +100,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -155,7 +158,7 @@ LOGGING = {
     },
     'loggers': {
         'vocab': {
-            'handlers': ['default'],
+            'handlers': ['vocab'],
             'level': 'DEBUG',
             'propagate': True
         },

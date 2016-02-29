@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vocab Registry">
+    <!-- Stylesheets needed for the whole site can go here -->
+    {% block extra_css %}<!-- This line holds stylesheets for individual pages if needed -->{% endblock extra_css %}
+    <title>{% block title %}Vocab Registry{% endblock title %}</title>
+</head>
+<body>
+<!-- Content here would be on every single page (like a login bar at the top or footer) -->
+{% block content %}<!-- Individual page content goes here-->{% endblock content %}
+<!-- Full site javascript can go here if you wish-->
+{% block extra_js %}<!-- Individual page javascript goes here-->{% endblock extra_js %}
+</body>
+</html>
