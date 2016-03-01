@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,13 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Vocab Registry">
     <!-- Stylesheets needed for the whole site can go here -->
+    <link rel="stylesheet" href="{% static "vocab/css/test.css" %}">
     {% block extra_css %}<!-- This line holds stylesheets for individual pages if needed -->{% endblock extra_css %}
     <title>{% block title %}Vocab Registry{% endblock title %}</title>
 </head>
 <body>
 <!-- Content here would be on every single page (like a login bar at the top or footer) -->
+<img height="35" width="55" src="{% static "vocab/img/test.png" %}"/>
 {% block content %}<!-- Individual page content goes here-->{% endblock content %}
 <!-- Full site javascript can go here if you wish-->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="{% static "vocab/js/test.js" %}"></script>
 {% block extra_js %}<!-- Individual page javascript goes here-->{% endblock extra_js %}
 </body>
 </html>
