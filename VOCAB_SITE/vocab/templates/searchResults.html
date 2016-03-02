@@ -1,0 +1,16 @@
+{% extends "master.html" %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="row content">
+    <p class="para">Welcome to the Search Results Page.  Below you should find all the words in all the world.  You asked for it, you got it!</p>
+    <hr>
+        <p>This is where all the words in all the world will be displayed</p>
+    <hr>
+</div>
+{% endblock content %}

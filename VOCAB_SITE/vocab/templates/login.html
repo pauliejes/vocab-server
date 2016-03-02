@@ -1,0 +1,34 @@
+{% extends "master.html" %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="row content">
+    <p class="para">Welcome to the Login Page.  If you want to play along, you must provide sufficient information to sign up such that we are convinced that should you not play along with our rules we can track you down and find you.  Watching you!</p>
+    <hr>
+
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit" />
+    </form>
+
+    <!-- <form action="/your-name/" method="post">
+        <label for="tom">Your name: </label>
+        <input id="loginname" type="text" name="tom" value="{{ current_name }}">
+        <input type="submit" value="OK">
+    </form> -->
+
+    <!-- <form class="" role="form" action="index.html" method="post">
+        <div class="form-group">
+            <textarea class="form-control" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form> -->
+    <hr>
+</div>
+{% endblock content %}

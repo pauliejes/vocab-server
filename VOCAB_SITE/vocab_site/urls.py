@@ -21,4 +21,10 @@ from vocab import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home, name="home"),
+    url(r'^createURI$', views.createURI, name="createURI"),
+    url(r'^createUser$', views.createUser, name="createUser"),
+    url(r'^createVocab$', views.createVocab, name="createVocab"),
+    url(r'^login$', views.login, name="login"),
+    url(r'^searchResults$', views.searchResults, name="searchResults"),
+    url(r'^userProfile$', views.userProfile, name="userProfile"),
 ]

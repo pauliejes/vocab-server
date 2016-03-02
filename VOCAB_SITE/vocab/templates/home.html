@@ -1,4 +1,16 @@
 {% extends "master.html" %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
 {% block content %}
-<div>Hello</div>
+<div class="row content">
+    <p class="para">Welcome to the xAPI Vocabulary Registry Page.  Here you can review other vocabularies and create you own vocabularies or individual terms.</p>
+    <p class="para">Anyone is welcome to search vocabularies to find the defined meaning of a given term or see if a new term is needed.</p>
+    <p class="para">If after considering existing terms you find that no term meets your groups needs, use your group's account or create an account and fill in the proper fields to create a new term or vocabulary.</p>
+    <hr>
+</div>
 {% endblock content %}

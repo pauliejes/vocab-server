@@ -1,0 +1,16 @@
+{% extends "master.html" %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="row content">
+    <p class="para">Welcome to the User Profile Page.  Below you should find everything we know about you.  U B U!</p>
+    <hr>
+        <p>You aren't really that interesting.</p>
+    <hr>
+</div>
+{% endblock content %}
