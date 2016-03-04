@@ -10,11 +10,47 @@
 <div class="row content">
     <p class="para">Welcome to the Create User Page.  Here you can access and submit the form to create a user account with this page.  Mazel Tov!</p>
     <hr>
-    <form class="" role="form" action="index.html" method="post">
-        <div class="form-group">
+    <form class="" role="form" action="{% url 'createUser' %}" method="post">
+        <!-- <div class="form-group">
             <textarea class="form-control" rows="3" required></textarea>
         </div>
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-success">Submit</button> -->
+        {% csrf_token %}
+        <!-- set this aside for a moment and try something different below this line which works -->
+        {{ form.as_p }}
+    <!--    {{ form.non_field_errors }}
+        <div class="fieldWrapper">
+            {{ form.subject.errors }}
+            <label for="{{ form.subject.id_for_label }}">Email subject:</label>
+            {{ form.subject }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.message.errors }}
+            <label for="{{ form.message.id_for_label }}">Your message:</label>
+            {{ form.message }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.sender.errors }}
+            {{ form.sender.label_tag }}
+            <!-- <label for="{{ form.sender.id_for_label }}">Your email address:</label>
+            {{ form.sender }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.cc_myself.errors }}
+            <label for="{{ form.cc_myself.id_for_label }}">CC yourself?</label>
+            {{ form.cc_myself }}
+        </div>  -->
+    <!-- Anotheralternate way to display a form -->
+        <!-- {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        {% endfor %} -->
+        <input type="submit" value="Submit" />
     </form>
     <hr>
 </div>

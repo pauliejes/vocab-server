@@ -10,12 +10,19 @@
 <div class="row content">
     <p class="para">Welcome to the Create Vocabulary Page.  Here you can access and submit the form to create a complete vocabulary with muultiple verbs, activity types and perhaps even more with this page.  Adventure it out there!</p>
     <hr>
-    <form class="" role="form" action="index.html" method="post">
+
+    <form action="{% url 'createVocab' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+    </form>
+
+    <!-- <form class="" role="form" action="index.html" method="post">
         <div class="form-group">
             <textarea class="form-control" rows="3" required></textarea>
         </div>
         <button type="submit" class="btn btn-success">Submit</button>
-    </form>
+    </form> -->
     <hr>
 </div>
 {% endblock content %}
