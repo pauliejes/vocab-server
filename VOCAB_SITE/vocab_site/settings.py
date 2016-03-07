@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = '/userProfile'
 
 # Application definition
 
@@ -125,8 +126,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-
+STATIC_ROOT = path.join(path.dirname(__file__), 'static/')
 STATIC_URL = '/static/'
+
 
 REQUEST_HANDLER_LOG_DIR = path.join(PROJECT_DIR, 'logs/django_request.log')
 VOCAB_LOG_DIR = path.join(PROJECT_DIR, 'logs/vocab.log')

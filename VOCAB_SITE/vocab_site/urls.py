@@ -15,16 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 from vocab import views
 
+admin.autodiscover()
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/login/$', auth_views.login, name="login"),
+    url(r'^accounts/logout/$', views.logout_view, name="logout"),
     url(r'^$', views.home, name="home"),
     url(r'^createURI$', views.createURI, name="createURI"),
     url(r'^createUser$', views.createUser, name="createUser"),
     url(r'^createVocab$', views.createVocab, name="createVocab"),
-    url(r'^login$', views.login, name="login"),
     url(r'^searchResults$', views.searchResults, name="searchResults"),
     url(r'^userProfile$', views.userProfile, name="userProfile"),
 ]

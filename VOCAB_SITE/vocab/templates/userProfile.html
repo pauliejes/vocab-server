@@ -10,7 +10,15 @@
 <div class="row content">
     <p class="para">Welcome to the User Profile Page.  Below you should find everything we know about you.  U B U!</p>
     <hr>
-        <p>You aren't really that interesting.</p>
+        <p>Hello {{ user.username }}. You aren't really that interesting.</p>
     <hr>
+    <br>
+    <ul>
+    {% for url in user.userprofile.registerediri_set.all %}
+    <li>{{ url.address }}</li>
+    {% empty %}
+    You have no IRIs registered
+    {% endfor %}
+    </ul>
 </div>
 {% endblock content %}
