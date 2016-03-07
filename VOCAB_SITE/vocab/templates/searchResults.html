@@ -10,7 +10,20 @@
 <div class="row content">
     <p class="para">Welcome to the Search Results Page.  Below you should find all the words in all the world.  You asked for it, you got it!</p>
     <hr>
-        <p>This is where all the words in all the world will be displayed</p>
+        <form class="" role="form" action="{% url 'searchResults' %}" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <!-- set this aside for a moment and try something different below this line which works -->
+        {{ form.as_p }}
+        <input type="submit" value="Search" />
+    </form>
     <hr>
+    <ul>
+    {% for iri in iris %}
+    <li>{{ iri.address }}</li>
+    {% empty %}
+    No Results
+    {% endfor %}
+    </ul>
 </div>
 {% endblock content %}

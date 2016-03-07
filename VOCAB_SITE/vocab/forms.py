@@ -1,7 +1,21 @@
 from django import forms
 
-class LoginForm(forms.Form):
-    userName = forms.CharField(label='User name', max_length=10)
+class RegisterForm(forms.Form):
+    username = forms.CharField(max_length=200, label='Name')
+    email = forms.EmailField(max_length=200, label='Email')
+    password = forms.CharField(label='Password', 
+                                widget=forms.PasswordInput(render_value=False))
+    password2 = forms.CharField(label='Password Again', 
+                                widget=forms.PasswordInput(render_value=False))
+
+    def clean(self):
+        cleaned = super(RegisterForm, self).clean()
+        p1 = cleaned.get("password")
+        p2 = cleaned.get("password2")
+        if p1 and p2:
+            if p1 == p2:
+                return cleaned
+        raise forms.ValidationError("Passwords did not match")
 
 class ContactForm(forms.Form):
     subject = forms.CharField(label='Subject', max_length=100)
@@ -23,3 +37,6 @@ class VocabForm(forms.Form):
     vocabulary = forms.CharField(label='Vocabulary/Profile', max_length=40)
     termType = forms.CharField(label='Term Type', max_length=40)
     term = forms.CharField(label='Term', max_length=40)
+
+class SearchForm(forms.Form):
+    search_term = forms.CharField(label='Search:', max_length=40)
