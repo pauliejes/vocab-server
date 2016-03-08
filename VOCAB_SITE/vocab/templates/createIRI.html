@@ -1,0 +1,31 @@
+{% extends "master.html" %}
+{% load i18n %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="row content">
+    <p class="para">Welcome to the Create IRI Page.  Here you can access and submit the form to request a persistant IRI.  Have fun!</p>
+    <hr>
+
+    <form action="{% url 'createIRI' %}" class="form-inline" method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form.errors }}
+            <big>https://w3id.org/xapi/</big>{{ form.vocabulary }}<big>/</big>{{form.termType}}<big>/</big>{{form.term}}
+            <br>
+            <input class="btn btn-success" type="submit" value="Submit"/>
+            <button type='button' class='btn btn-info'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span> Add IRI</button>
+        {% endfor %}
+    </form>
+
+    <hr>
+
+</div>
+
+{% endblock content %}

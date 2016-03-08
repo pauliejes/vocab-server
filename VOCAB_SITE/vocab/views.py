@@ -1,13 +1,14 @@
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.forms import formset_factory
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
-
-from .forms import RegisterForm, ContactForm, TermForm, VocabForm, SearchForm
+from .forms import RegisterForm, ContactForm, IRIForm, SearchForm
 from .models import RegisteredIRI
 
 @require_http_methods(["GET"])
@@ -16,29 +17,29 @@ def home(request):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def createURI(request):
-    # return render(request, 'login.html')
+def createIRI(request):
+    IRIFormset = formset_factory(IRIForm)
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = TermForm(request.POST)
+        formset = IRIFormset(request.POST)
         # check whether it's valid:
-        if form.is_valid():
+        if formset.is_valid():
             # process the data in form.cleaned_data as required
-            domain = form.cleaned_data['domain']
-            resourceType = form.cleaned_data['resourceType']
-            vocabulary = form.cleaned_data['vocabulary']
-            termType = form.cleaned_data['termType']
-            term = form.cleaned_data['term']
-            newuri = 'https://' + domain + '/' + resourceType + '/' + vocabulary + '/' + termType + '/' + term
+            for form in formset:
+                if form.is_valid():
+                    vocabulary = form.cleaned_data['vocabulary']
+                    termType = form.cleaned_data['termType']
+                    term = form.cleaned_data['term']
+                    newiri = 'https://w3id.org/xapi/' + vocabulary + '/' + termType + '/' + term + '/'
             # redirect to a new URL:
-            return HttpResponse('you did not create a term, but we did trick this info out of you: <br> %s' % newuri)
+            return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': newiri, 'data': form.cleaned_data})
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = TermForm()
+        formset = IRIFormset()
 
-    return render(request, 'createURI.html', {'form': form})
+    return render(request, 'createIRI.html', {'formset': formset})
 
 @csrf_protect
 @require_http_methods(["POST", "GET"])
@@ -58,9 +59,9 @@ def createUser(request):
                 if not User.objects.filter(email__exact=email).count():
                     User.objects.create_user(name, email, pword)
                 else:
-                    return render(request, 'createUser.html', {"form": form, "error_message": "Email %s is already registered." % email})                    
+                    return render(request, 'createUser.html', {"form": form, "error_message": "Email %s is already registered." % email})
             else:
-                return render(request, 'createUser.html', {"form": form, "error_message": "User %s already exists." % name})                
+                return render(request, 'createUser.html', {"form": form, "error_message": "User %s already exists." % name})
             # If a user is already logged in, log them out
             if request.user.is_authenticated():
                 logout(request)
@@ -73,31 +74,31 @@ def createUser(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 def createVocab(request):
-    # return render(request, 'login.html')
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = VocabForm(request.POST)
+        form = IRIForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            domain = form.cleaned_data['domain']
-            resourceType = form.cleaned_data['resourceType']
+            # domain = form.cleaned_data['domain']
+            # resourceType = form.cleaned_data['resourceType']
             vocabulary = form.cleaned_data['vocabulary']
             termType = form.cleaned_data['termType']
             term = form.cleaned_data['term']
             # redirect to a new URL:
-            return HttpResponse("that's a lot of words are you finished now? <br> %s" % vocabulary)
+            return HttpResponseRedirect('vocabReceived', form.cleaned_data)
 
     # if a GET (or any other method) we'll create a blank form
+    # starting at the vocab portion of the iri
     else:
-        form = VocabForm()
+        form = IRIForm()
 
     return render(request, 'createVocab.html', {'form': form})
 
 @login_required
 @require_http_methods(["GET"])
-def userProfile(request):    
+def userProfile(request):
     return render(request, 'userProfile.html')
 
 @require_http_methods(["GET", "POST"])
@@ -112,28 +113,13 @@ def searchResults(request):
         form = SearchForm()
     return render(request, 'searchResults.html', {"form":form})
 
-
-# @require_http_methods(["GET", "POST"])
-# def login(request):
-#     # return render(request, 'login.html')
-#     # if this is a POST request we need to process the form data
-#     if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = LoginForm(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#             # process the data in form.cleaned_data as required
-#             # ...
-#             # redirect to a new URL:
-#             return HttpResponse('thank you please drive through <br> %s' % form.cleaned_data['userName'])
-
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = RegisterForm()
-
-#     return render(request, 'login.html', {'form': form})
 @login_required()
 @require_http_methods(["GET"])
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('home'))
+
+@login_required()
+@require_http_methods(["GET"])
+def iriCreationResults(request):
+    return render(request, 'iriCreationResults.html')

@@ -26,9 +26,11 @@ urlpatterns = [
     url(r'^accounts/login/$', auth_views.login, name="login"),
     url(r'^accounts/logout/$', views.logout_view, name="logout"),
     url(r'^$', views.home, name="home"),
-    url(r'^createURI$', views.createURI, name="createURI"),
+    url(r'^createIRI$', views.createIRI, name="createIRI"),
     url(r'^createUser$', views.createUser, name="createUser"),
     url(r'^createVocab$', views.createVocab, name="createVocab"),
     url(r'^searchResults$', views.searchResults, name="searchResults"),
+    url(r'^iriCreationResults$', views.iriCreationResults, name="iriCreationResults"),
+    # url(r'^vocabReceived$', views.vocabReceived, name="vocabReceived"),
     url(r'^userProfile$', views.userProfile, name="userProfile"),
 ]

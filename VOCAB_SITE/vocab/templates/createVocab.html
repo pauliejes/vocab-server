@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="row content">
-    <p class="para">Welcome to the Create Vocabulary Page.  Here you can access and submit the form to create a complete vocabulary with muultiple verbs, activity types and perhaps even more with this page.  Adventure it out there!</p>
+    <p class="para">Welcome to the Create Vocabulary Page.  Here you can access and submit the form to create a complete vocabulary with multiple verbs, activity types and perhaps even more with this page.  Adventure it out there!</p>
     <hr>
 
     <form action="{% url 'createVocab' %}" method="post">
@@ -17,12 +17,6 @@
         <input type="submit" value="Submit" />
     </form>
 
-    <!-- <form class="" role="form" action="index.html" method="post">
-        <div class="form-group">
-            <textarea class="form-control" rows="3" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form> -->
     <hr>
 </div>
 {% endblock content %}

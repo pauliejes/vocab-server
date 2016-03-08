@@ -14,7 +14,7 @@
     <hr>
     <br>
     <ul>
-    {% for url in user.userprofile.registerediri_set.all %}
+    {% for url in user.userProfile.registerediri_set.all %}
     <li>{{ url.address }}</li>
     {% empty %}
     You have no IRIs registered

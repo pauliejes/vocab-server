@@ -1,0 +1,15 @@
+{% extends "master.html" %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="row content">
+    <p>you did not create a term, but we did trick this info out of you: {{newiri}} {{data.vocabulary}} {{data.termType}} {{data.term}}<br></p>
+    <p class="para">Welcome to the Create IRI Page.  Here you can access and submit the form to request a persistant IRI.  Have fun!</p>
+    <hr>
+</div>
+{% endblock content %}

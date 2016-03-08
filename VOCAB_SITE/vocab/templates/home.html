@@ -7,9 +7,17 @@
 
 {% block content %}
 <div class="row content">
-    <p class="para">Welcome to the xAPI Vocabulary Registry Page.  Here you can review other vocabularies and create you own vocabularies or individual terms.</p>
-    <p class="para">Anyone is welcome to search vocabularies to find the defined meaning of a given term or see if a new term is needed.</p>
-    <p class="para">If after considering existing terms you find that no term meets your groups needs, use your group's account or create an account and fill in the proper fields to create a new term or vocabulary.</p>
+    <p class="para" id="p1">Welcome to the xAPI Vocabulary Registry Page.  Here you can review other vocabularies and create you own vocabularies or individual terms.</p>
+    <p class="para" id="p2">Anyone is welcome to search vocabularies to find the defined meaning of a given term or see if a new term is needed.</p>
+    <p class="para" id="p3">If after considering existing terms you find that no term meets your groups needs, use your group's account or create an account and fill in the proper fields to create a new term or vocabulary.</p>
+    <p class="para" id="p4">For Phase 1, emphasis is placed on establishing the ability to create a persistent IRI which will allow the creation of vocabularyies and terms. Therefore at this point Searching is disabled, please check back in the future.</p>
     <hr>
+    Please Choose a Button:<br>
+    <a type="button" class="btn btn-info" href="{% url 'createIRI' %}" role="button" name="createButton">Create</a>
+    <a type="button" class="btn btn-info" href="{% url 'searchResults' %}" role="button" name="searchButton" disabled="true">Search</a>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<!-- <script type="text/javascript" src="{% static "vocab/js/home.js" %}"></script> -->
+{% endblock extra_js %}

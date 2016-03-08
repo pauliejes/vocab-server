@@ -34,18 +34,18 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'createURI' %}">Create URI</a></li>
-        <li><a href="{% url 'createVocab' %}">Create Vocabulary</a></li>
-        <li><a href="{% url 'createUser' %}">Create New User</a></li>
-        <li><a href="{% url 'userProfile' %}">View User Profile</a></li>
-        <li><a href="{% url 'searchResults' %}">Search Results</a></li>
+        <li class="active" id="home"><a href="{% url 'home' %}">Home</a></li>
+        <li id="createIRI"><a href="{% url 'createIRI' %}">Create IRI</a></li>
+        <li id="createVocab"><a href="{% url 'createVocab' %}">Create Vocabulary</a></li>
+        <li id="createUser"><a href="{% url 'createUser' %}">Create New User</a></li>
+        <li id="userProfile"><a href="#">View User Profile</a></li>
+        <li id="searchResults"><a href="#">Search Results</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
           <div class="input-group col-sm-9">
               <input type="text" class="form-control" placeholder="Search Registry...">
               <span class="input-group-btn">
-                  <button class="btn btn-default" type="button">
+                  <button class="btn btn-default" type="button" disabled="true">
                       <span class="glyphicon glyphicon-search"></span>
                   </button>
               </span>
