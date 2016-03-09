@@ -17,6 +17,8 @@ from os.path import dirname, abspath
 BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 PROJECT_DIR = dirname(dirname(dirname(dirname(abspath(__file__)))))
 
+IRI_DOMAIN = "https://w3id.org/xapi/"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
