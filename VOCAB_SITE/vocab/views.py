@@ -2,6 +2,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
@@ -14,6 +15,7 @@ from .models import RegisteredIRI
 def home(request):
     return render(request, 'home.html')
 
+@csrf_protect
 @login_required
 @require_http_methods(["GET", "POST"])
 def createURI(request):
@@ -70,6 +72,7 @@ def createUser(request):
         else:
             return render(request, 'createUser.html', {"form": form})
 
+@csrf_protect
 @login_required
 @require_http_methods(["GET", "POST"])
 def createVocab(request):
@@ -100,38 +103,33 @@ def createVocab(request):
 def userProfile(request):    
     return render(request, 'userProfile.html')
 
+@csrf_protect
 @require_http_methods(["GET", "POST"])
 def searchResults(request):
     if request.method == 'POST':
+        query = None
+        iris = None
         form = SearchForm(request.POST)
         if form.is_valid:
-            search_term = form.data['search_term']
-            iris = RegisteredIRI.objects.filter(address__contains=search_term)
+            if form.data['vocabulary']:
+                query = Q(vocabulary__contains=form.data['vocabulary'])
+            if form.data['term_type']:
+                if query:
+                    query = query | Q(term_type__contains=form.data['term_type'])
+                else:
+                    query = Q(term_type__contains=form.data['term_type'])
+            if form.data['term']:
+                if query:
+                    query = query | Q(term__contains=form.data['term'])
+                else:
+                    query = Q(term__contains=form.data['term'])
+            if query:
+                iris = RegisteredIRI.objects.filter(query)
         return render(request, 'searchResults.html', {"form":form, "iris":iris})
     else:
         form = SearchForm()
     return render(request, 'searchResults.html', {"form":form})
 
-
-# @require_http_methods(["GET", "POST"])
-# def login(request):
-#     # return render(request, 'login.html')
-#     # if this is a POST request we need to process the form data
-#     if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = LoginForm(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#             # process the data in form.cleaned_data as required
-#             # ...
-#             # redirect to a new URL:
-#             return HttpResponse('thank you please drive through <br> %s' % form.cleaned_data['userName'])
-
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = RegisterForm()
-
-#     return render(request, 'login.html', {'form': form})
 @login_required()
 @require_http_methods(["GET"])
 def logout_view(request):

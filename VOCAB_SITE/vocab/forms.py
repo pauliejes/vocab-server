@@ -39,4 +39,6 @@ class VocabForm(forms.Form):
     term = forms.CharField(label='Term', max_length=40)
 
 class SearchForm(forms.Form):
-    search_term = forms.CharField(label='Search:', max_length=40)
+    vocabulary = forms.CharField(label='Vocabulary:', max_length=40, required=False)
+    term_type = forms.CharField(label='Term Type:', max_length=40, required=False)
+    term = forms.CharField(label='Term:', max_length=40, required=False)
