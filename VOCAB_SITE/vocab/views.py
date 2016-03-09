@@ -32,6 +32,7 @@ def createIRI(request):
                     termType = form.cleaned_data['termType']
                     term = form.cleaned_data['term']
                     newiri = 'https://w3id.org/xapi/' + vocabulary + '/' + termType + '/' + term + '/'
+                    print(newiri)
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': newiri, 'data': form.cleaned_data})
 
