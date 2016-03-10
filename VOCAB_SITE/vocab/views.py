@@ -10,7 +10,7 @@ from django.shortcuts import render, render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from .forms import RegisterForm, ContactForm, IRIForm, SearchForm
-from .models import RegisteredIRI
+from .models import RegisteredIRI, UserProfile
 
 @require_http_methods(["GET"])
 def home(request):
@@ -34,7 +34,15 @@ def createIRI(request):
                     termType = form.cleaned_data['termType']
                     term = form.cleaned_data['term']
                     newiri = 'https://w3id.org/xapi/' + vocabulary + '/' + termType + '/' + term + '/'
-                    print(newiri)
+                    print(newiri, request.user)
+                    print vocabulary
+                    print termType
+                    print term
+                    print request.user
+                    profile = UserProfile.objects.get(user = request.user)
+                    iriobj = RegisteredIRI(vocabulary = vocabulary, term_type = termType, term = term, userprofile = profile)
+                    iriobj.save()
+                    print iriobj
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': newiri, 'data': form.cleaned_data})
 
