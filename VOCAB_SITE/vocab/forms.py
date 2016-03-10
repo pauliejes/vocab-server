@@ -27,6 +27,6 @@ class SearchForm(forms.Form):
     search_term = forms.CharField(label='Search:', max_length=40)
 
 class IRIForm(forms.Form):
-    vocabulary = forms.CharField(label='Vocabulary/Profile', widget=forms.TextInput(attrs={'placeholder': 'Vocabulary/Profile', 'class': 'form-control'}))
+    vocabulary = forms.CharField(label='Vocabulary/Profile', max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Vocabulary/Profile', 'class': 'form-control'}))
     termType = forms.ChoiceField(label='Term Type', required=False, choices=((None, ''), ('verbs', 'Verbs'), ('activityTypes', 'Activity Types'), ('attachments', 'Attachments'), ('extensions', 'Extensions')), widget=forms.Select(attrs={'class': 'form-control'}))
-    term = forms.CharField(label='Term', required=False, max_length=40, widget=forms.TextInput(attrs={'placeholder': 'Term', 'class': 'form-control'}))
+    term = forms.CharField(label='Term', required=False, max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Term', 'class': 'form-control'}))

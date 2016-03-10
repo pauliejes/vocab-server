@@ -2,6 +2,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
+from django.core.exceptions import FieldError
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 
@@ -54,10 +55,12 @@ def createIRI(request):
                         return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': newiri, 'data': form.cleaned_data})
                     except IntegrityError:
                         # handle_exception()
-                        print "exception handled"
+                        print "IntegrityError handled"
+                        raise FieldError("You've got no integrity!")
                     except KeyError:
                         # handle_exception()
                         print "KeyError handled"
+                        raise FieldError("I'm betting you left everything blank, Enter some data!!")
 
             # redirect to a new URL:
 
