@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^accounts/login/$', auth_views.login, name="login"),
     url(r'^accounts/logout/$', views.logout_view, name="logout"),
     url(r'^$', views.home, name="home"),
+    url(r'^adminIRIs$', views.adminIRIs, name="adminIRIs"),
     url(r'^createIRI$', views.createIRI, name="createIRI"),
     url(r'^createUser$', views.createUser, name="createUser"),
     url(r'^createVocab$', views.createVocab, name="createVocab"),

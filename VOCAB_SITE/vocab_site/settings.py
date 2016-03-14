@@ -32,6 +32,20 @@ ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = '/userProfile'
 
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#For mail_admins
+SERVER_EMAIL = 'adlvocab@gmail.com'
+ADMINS = [('Lou', 'lou.wolford.ctr@adlnet.gov')]
+
+# If not specified, EMAIL_BACKEND will default to the SMTP backend. Here are the following arguments for that
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'adlvocab@gmail.com'
+EMAIL_HOST_PASSWORD = '$c0rmR0ck$'
+EMAIL_USE_SSL = True
+EMAIL_TIMEOUT = 10
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -85,8 +99,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'vocab',
-        'USER': 'andy',
-        'PASSWORD': '1234',
+        'USER': 'vsadmin',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '',
     }
