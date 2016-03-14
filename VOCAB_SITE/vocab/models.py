@@ -5,11 +5,11 @@ import json
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
-from django.core import mail
-from django.core.mail import mail_admins, send_mail
 from django.db import models, IntegrityError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+from .tasks import notify_admins
 
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -46,5 +46,4 @@ class RegisteredIRI(models.Model):
 @receiver(post_save, sender=RegisteredIRI)
 def iri_post_save(sender, **kwargs):
 	if kwargs['created']:
-		with mail.get_connection() as connection:
-			mail_admins("New IRI Alert", "There is a new IRI waiting for you to review.", fail_silently=False)
+		notify_admins.delay(kwargs['instance'].return_address())

@@ -15,6 +15,7 @@ from django.views.decorators.http import require_http_methods
 
 from .forms import RegisterForm, ContactForm, IRIForm, SearchForm
 from .models import RegisteredIRI, UserProfile
+from .tasks import notify_user
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +36,6 @@ def createIRI(request):
         # check whether it's valid:
         if formset.is_valid():
             # process the data in form.cleaned_data as required
-            import pdb
-            pdb.set_trace()
             for form in formset:
                 if form.is_valid():
                     vocabulary = form.cleaned_data['vocabulary']
@@ -174,7 +173,7 @@ def adminIRIs(request):
                 else:
                     iri.reviewed = True
                 iri.save()
-                # notify_user.delay(iri.return_address(), iri.userprofile.user.email)
+                notify_user.delay(iri.return_address(), iri.userprofile.user.email, iri.accepted)
         return render(request, 'adminIRIs.html', {"iris": iris})
     else:
         return HttpResponseForbidden()
