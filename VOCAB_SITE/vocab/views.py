@@ -3,17 +3,21 @@ import logging
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+
+from django.core.exceptions import FieldError
 from django.core.urlresolvers import reverse
+
 from django.db import transaction, IntegrityError
 from django.db.models import Q
+
 from django.forms import formset_factory
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, render_to_response
+
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 
-from .forms import RegisterForm, ContactForm, IRIForm, SearchForm
+from .forms import RegisterForm, ContactForm, IRIForm, SearchForm, RequiredFormSet
 from .models import RegisteredIRI, UserProfile
 from .tasks import notify_user
 
@@ -28,7 +32,7 @@ def home(request):
 @require_http_methods(["GET", "POST"])
 @transaction.atomic
 def createIRI(request):
-    IRIFormset = formset_factory(IRIForm)
+    IRIFormset = formset_factory(IRIForm, formset=RequiredFormSet)
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -38,17 +42,26 @@ def createIRI(request):
             # process the data in form.cleaned_data as required
             for form in formset:
                 if form.is_valid():
-                    vocabulary = form.cleaned_data['vocabulary']
-                    termType = form.cleaned_data['termType']
-                    term = form.cleaned_data['term']
-                    newiri = 'https://w3id.org/xapi/' + vocabulary + '/' + termType + '/' + term + '/'
-                    profile = UserProfile.objects.get(user=request.user)
                     try:
-                        RegisteredIRI.objects.create(vocabulary=vocabulary, term_type=termType, term=term, userprofile=profile)
-                    except IntegrityError as e:
-                        error = e.message
+                        vocabulary = form.cleaned_data['vocabulary']
+                        termType = form.cleaned_data['termType']
+                        term = form.cleaned_data['term']
+                        newiri = 'https://w3id.org/xapi/' + vocabulary + '/' + termType + '/' + term + '/'
+                        profile = UserProfile.objects.get(user = request.user)
+                        iriobj = RegisteredIRI(vocabulary = vocabulary, term_type = termType, term = term, userprofile = profile)
+                        iriobj.save()
+                        return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': newiri, 'data': form.cleaned_data})
+                    except IntegrityError:
+                        # handle_exception()
+                        print "IntegrityError handled"
+                        raise FieldError("You've got no integrity!")
+                    except KeyError:
+                        # handle_exception()
+                        print "KeyError handled"
+                        raise FieldError("I'm betting you left everything blank, Enter some data!!")
+
             # redirect to a new URL:
-            return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': newiri, 'data': form.cleaned_data})
+
     # if a GET (or any other method) we'll create a blank form
     else:
         formset = IRIFormset()
