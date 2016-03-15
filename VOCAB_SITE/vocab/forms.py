@@ -32,6 +32,14 @@ class IRIForm(forms.Form):
     termType = forms.ChoiceField(label='Term Type', required=False, choices=((None, ''), ('verbs', 'Verbs'), ('activityTypes', 'Activity Types'), ('attachments', 'Attachments'), ('extensions', 'Extensions')), widget=forms.Select(attrs={'class': 'form-control'}))
     term = forms.CharField(label='Term', required=False, max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Term', 'class': 'form-control'}))
 
+    def clean(self):
+        cleaned = super(IRIForm, self).clean()
+        term_type = cleaned.get("termType", None)
+        term = cleaned.get("term", None)
+        if term and not term_type:
+            raise forms.ValidationError("Must have a term type if giving a term")
+        return cleaned
+
 class RequiredFormSet(BaseFormSet):
     def __init__(self, *args, **kwargs):
         super(RequiredFormSet, self).__init__(*args, **kwargs)

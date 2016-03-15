@@ -72,15 +72,19 @@
 
 ***Configure VOCAB_SITE/celeryd.conf***
 
+   ```
    command=/path/to/vocab_container/env/bin/celery worker -A vocab --loglevel=DEBUG
    directory=/path/to/vocab_container/vocab-server/VOCAB_SITE
    stdout_logfile=/path/to/vocab_container/logs/celery/outworker.log
    stderr_logfile=/path/to/vocab_container/logs/celery/errworker.log
+   ```
 
 ***Configure VOCAB_SITE/supervisord.conf***
 
+   ```
    logfile=/path/to/vocab_container/logs/supervisord/supervisord.log
    childlogdir=/path/to/vocab_container/logs/supervisord/
+   ```
 
 ***Create upstart script in `/etc/init` named vocab-email.conf***
 
