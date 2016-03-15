@@ -4,20 +4,19 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-from django.core.exceptions import FieldError
 from django.core.urlresolvers import reverse
 
-from django.db import transaction, IntegrityError
+from django.db import transaction
 from django.db.models import Q
 
 from django.forms import formset_factory
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, JsonResponse
-from django.shortcuts import render, render_to_response
+from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.shortcuts import render
 
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 
-from .forms import RegisterForm, ContactForm, IRIForm, SearchForm, RequiredFormSet
+from .forms import RegisterForm, IRIForm, SearchForm, RequiredFormSet
 from .models import RegisteredIRI, UserProfile
 from .tasks import notify_user
 
