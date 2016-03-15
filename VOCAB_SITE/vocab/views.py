@@ -42,30 +42,16 @@ def createIRI(request):
             # process the data in form.cleaned_data as required
             for form in formset:
                 if form.is_valid():
-                    try:
-                        vocabulary = form.cleaned_data['vocabulary']
-                        termType = form.cleaned_data['termType']
-                        term = form.cleaned_data['term']
-                        newiri = 'https://w3id.org/xapi/' + vocabulary + '/' + termType + '/' + term + '/'
-                        profile = UserProfile.objects.get(user = request.user)
-                        iriobj = RegisteredIRI(vocabulary = vocabulary, term_type = termType, term = term, userprofile = profile)
-                        iriobj.save()
-                        return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': newiri, 'data': form.cleaned_data})
-                    except IntegrityError:
-                        # handle_exception()
-                        print "IntegrityError handled"
-                        raise FieldError("You've got no integrity!")
-                    except KeyError:
-                        # handle_exception()
-                        print "KeyError handled"
-                        raise FieldError("I'm betting you left everything blank, Enter some data!!")
-
+                    vocabulary = form.cleaned_data['vocabulary']
+                    termType = form.cleaned_data['termType']
+                    term = form.cleaned_data['term']
+                    profile = UserProfile.objects.get(user=request.user)
+                    iriobj = RegisteredIRI.objects.create(vocabulary=vocabulary, term_type=termType, term=term, userprofile=profile)
+            return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': iriobj.return_address(), 'data': form.cleaned_data})
             # redirect to a new URL:
-
     # if a GET (or any other method) we'll create a blank form
     else:
         formset = IRIFormset()
-
     return render(request, 'createIRI.html', {'formset': formset})
 
 @csrf_protect
