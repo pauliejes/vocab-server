@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 from django.core.urlresolvers import reverse
 
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.db.models import Q
 
 from django.forms import formset_factory
@@ -16,7 +16,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 
-from .forms import RegisterForm, IRIForm, SearchForm, RequiredFormSet
+from .forms import RegisterForm, RegisteredIRIForm, SearchForm, RequiredFormSet
 from .models import RegisteredIRI, UserProfile
 from .tasks import notify_user
 
@@ -31,18 +31,18 @@ def home(request):
 @require_http_methods(["GET", "POST"])
 @transaction.atomic
 def createIRI(request):
-    IRIFormset = formset_factory(IRIForm, formset=RequiredFormSet)
+    RegisteredIRIFormset = formset_factory(RegisteredIRIForm, formset=RequiredFormSet)
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        formset = IRIFormset(request.POST)
+        formset = RegisteredIRIFormset(request.POST)
         # check whether it's valid:
         if formset.is_valid():
             # process the data in form.cleaned_data as required
             for form in formset:
                 if form.is_valid():
                     vocabulary = form.cleaned_data['vocabulary']
-                    termType = form.cleaned_data['termType']
+                    termType = form.cleaned_data['term_type']
                     term = form.cleaned_data['term']
                     profile = UserProfile.objects.get(user=request.user)
                     iriobj = RegisteredIRI.objects.create(vocabulary=vocabulary, term_type=termType, term=term, userprofile=profile)
@@ -50,7 +50,7 @@ def createIRI(request):
             # redirect to a new URL:
     # if a GET (or any other method) we'll create a blank form
     else:
-        formset = IRIFormset()
+        formset = RegisteredIRIFormset()
     return render(request, 'createIRI.html', {'formset': formset})
 
 @csrf_protect
@@ -92,7 +92,7 @@ def createVocab(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = IRIForm(request.POST)
+        form = RegisteredIRIForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
@@ -107,7 +107,7 @@ def createVocab(request):
     # if a GET (or any other method) we'll create a blank form
     # starting at the vocab portion of the iri
     else:
-        form = IRIForm()
+        form = RegisteredIRIForm()
 
     return render(request, 'createVocab.html', {'form': form})
 

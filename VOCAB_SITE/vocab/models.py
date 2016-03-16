@@ -10,6 +10,14 @@ from django.dispatch import receiver
 
 from .tasks import notify_admins
 
+TERM_TYPE_CHOICES = (
+	('', ''),
+	('verbs', 'Verbs'),
+	('activityTypes', 'Activity Types'),
+	('attachments', 'Attachments'),
+	('extensions', 'Extensions')
+)
+
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -18,8 +26,8 @@ class UserProfile(models.Model):
 
 class RegisteredIRI(models.Model):
 	vocabulary = models.CharField(max_length=50)
-	term_type = models.CharField(max_length=50, blank=True, null=True)
-	term = models.CharField(max_length=50, blank=True, null=True)
+	term_type = models.CharField(max_length=15, blank=True, choices=TERM_TYPE_CHOICES)
+	term = models.CharField(max_length=50, blank=True)
 	accepted = models.BooleanField(default=False)
 	reviewed = models.BooleanField(default=False)
 	userprofile = models.ForeignKey(UserProfile, null=True, on_delete=models.SET_NULL)

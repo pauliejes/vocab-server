@@ -1,5 +1,8 @@
 from django import forms
+from django.forms import ModelForm
 from django.forms.formsets import BaseFormSet
+
+from .models import RegisteredIRI
 
 class RegisterForm(forms.Form):
     username = forms.CharField(max_length=200, label='Name')
@@ -27,14 +30,19 @@ class ContactForm(forms.Form):
 class SearchForm(forms.Form):
     search_term = forms.CharField(label='Search:', max_length=40)
 
-class IRIForm(forms.Form):
-    vocabulary = forms.CharField(label='Vocabulary/Profile', max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Vocabulary/Profile', 'class': 'form-control'}))
-    termType = forms.ChoiceField(label='Term Type', required=False, choices=((None, ''), ('verbs', 'Verbs'), ('activityTypes', 'Activity Types'), ('attachments', 'Attachments'), ('extensions', 'Extensions')), widget=forms.Select(attrs={'class': 'form-control'}))
-    term = forms.CharField(label='Term', required=False, max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Term', 'class': 'form-control'}))
+class RegisteredIRIForm(ModelForm):
+    class Meta:
+        model = RegisteredIRI
+        fields = ['vocabulary', 'term_type', 'term']
+        widgets = {
+            'vocabulary': forms.TextInput(attrs={'placeholder': 'Vocabulary/Profile', 'class': 'form-control'}),
+            'term_type': forms.Select(attrs={'class': 'form-control'}),
+            'term': forms.TextInput(attrs={'placeholder': 'Term', 'class': 'form-control'})
+        }
 
     def clean(self):
-        cleaned = super(IRIForm, self).clean()
-        term_type = cleaned.get("termType", None)
+        cleaned = super(RegisteredIRIForm, self).clean()
+        term_type = cleaned.get("term_type", None)
         term = cleaned.get("term", None)
         if term and not term_type:
             raise forms.ValidationError("Must have a term type if giving a term")
@@ -45,3 +53,16 @@ class RequiredFormSet(BaseFormSet):
         super(RequiredFormSet, self).__init__(*args, **kwargs)
         for form in self.forms:
             form.empty_permitted = False
+
+    def clean(self):
+        cleaned = super(RequiredFormSet, self).clean()
+        form = self.forms[0]
+        total = int(form.data['form-TOTAL_FORMS'])
+        tuple_list = []
+        for x in range(0, total):
+            data_tuple = (form.data['form-'+str(x)+'-vocabulary'], form.data['form-'+str(x)+'-term_type'], \
+                form.data['form-'+str(x)+'-term'])
+            if data_tuple in tuple_list:
+                raise forms.ValidationError("Forms cannot have the same triple values as other forms in the form set")
+            else:
+                tuple_list.append(data_tuple)

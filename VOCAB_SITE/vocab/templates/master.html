@@ -40,6 +40,7 @@
         <li id="createUser"><a href="{% url 'createUser' %}">Create New User</a></li>
         <li id="userProfile"><a href="#">View User Profile</a></li>
         <li id="searchResults"><a href="#">Search Results</a></li>
+        {% if user.is_superuser %}<li id="adminIRIs"><a href="{% url 'adminIRIs' %}">Manage IRIs</a></li>{% endif %}
       </ul>
       <ul class="nav navbar-nav navbar-right">
           <div class="input-group col-sm-9">

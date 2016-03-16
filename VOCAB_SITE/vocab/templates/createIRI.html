@@ -11,15 +11,15 @@
 <div class="row content">
     <p class="para">Welcome to the Create IRI Page.  Here you can access and submit the form to request a persistant IRI.  Have fun!</p>
     <hr>
-
     <form action="{% url 'createIRI' %}" class="form-inline" method="post">
         {% csrf_token %}
         {{ formset.management_form }}
+        {{ formset.non_form_errors }}
         <div class="forms">
             {% for form in formset %}
             <div id="form-{{ forloop.counter0}}">
                 {{ form.errors }}
-                <big>https://w3id.org/xapi/ {{ form.vocabulary }} / {{form.termType}} / {{form.term}}</big>
+                <big>https://w3id.org/xapi/ {{ form.vocabulary }} / {{form.term_type}} / {{form.term}}</big>
                 <br>
             </div>
             {% endfor %}
@@ -37,7 +37,7 @@
 {% block extra_js %}
 <script type="text/html" id='formtemplate'>
     <div id="form-__prefix__">
-        <big>https://w3id.org/xapi/ {{ formset.empty_form.vocabulary }} / {{formset.empty_form.termType}} / {{formset.empty_form.term}}</big>
+        <big>https://w3id.org/xapi/ {{ formset.empty_form.vocabulary }} / {{formset.empty_form.term_type}} / {{formset.empty_form.term}}</big>
         <br>
     </div>
 </script>
