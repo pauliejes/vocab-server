@@ -181,3 +181,10 @@ def adminIRIs(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('home'))
+
+@csrf_protect
+@login_required()
+@require_http_methods(["GET"])
+def rdfaForm(request):
+    logout(request)
+    return render(request, 'rdfaForm.html')
