@@ -1,13 +1,6 @@
+{% extends "master.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-<title>Experience API (xAPI) - ADL's Vocabulary</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
-</head>
-<body>
+{% block content %}
 <div class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
@@ -461,6 +454,7 @@
       </tbody>
     </table>
   </div>
+  {% endblock content %}
 
 
 <!-- Vocabulary of ADL Activity Types -->

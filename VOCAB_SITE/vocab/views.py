@@ -46,7 +46,7 @@ def createIRI(request):
                     term = form.cleaned_data['term']
                     profile = UserProfile.objects.get(user=request.user)
                     iriobj = RegisteredIRI.objects.create(vocabulary=vocabulary, term_type=termType, term=term, userprofile=profile)
-            return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': iriobj.return_address(), 'data': form.cleaned_data})
+            return HttpResponseRedirect(reverse('iriCreationResults'))
             # redirect to a new URL:
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -146,7 +146,8 @@ def searchResults(request):
 @login_required()
 @require_http_methods(["GET"])
 def iriCreationResults(request):
-    return render(request, 'iriCreationResults.html')
+    results = RegisteredIRI.objects.filter(userprofile__user = request.user)
+    return render(request, 'iriCreationResults.html', {'iris':results})
 
 @login_required()
 @require_http_methods(["GET", "POST"])
@@ -186,5 +187,4 @@ def logout_view(request):
 @login_required()
 @require_http_methods(["GET"])
 def rdfaForm(request):
-    logout(request)
     return render(request, 'rdfaForm.html')
