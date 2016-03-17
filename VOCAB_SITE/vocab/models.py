@@ -14,7 +14,7 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 	def __unicode__(self):
-		return json.dumps({"user": self.user.username, "registeredIRIs": [iri.return_address() for iri in self.registerediri_set.all()]})	
+		return json.dumps({"user": self.user.username, "registeredIRIs": [iri.return_address() for iri in self.registerediri_set.all()]})
 
 class RegisteredIRI(models.Model):
 	vocabulary = models.CharField(max_length=50)
@@ -46,3 +46,17 @@ class RegisteredIRI(models.Model):
 def iri_post_save(sender, **kwargs):
 	if kwargs['created']:
 		notify_admins.delay(kwargs['instance'].return_address())
+
+class Vocabulary(models.Model):
+	name = models.CharField(max_length=250)
+	iri = models.CharField(max_length=250)
+
+	def __unicode__(self):
+		return "%s:%s" % (self.id, self.name)
+
+class Term(models.Model):
+	name = models.CharField(max_length=250)
+	vocabulary = models.ForeignKey(Vocabulary)
+
+	def __unicode__(self):
+		return "%s:%s" % (self.id, self.name)

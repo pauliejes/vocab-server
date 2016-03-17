@@ -17,7 +17,7 @@
         {{ formset.management_form }}
         <div class="forms">
             {% for form in formset %}
-            <div id="form-{{ forloop.counter0}}">
+            <div id="form-{{ forloop.counter0 }}">
                 {{ form.errors }}
                 <big>https://w3id.org/xapi/ {{ form.vocabulary }} / {{form.termType}} / {{form.term}}</big>
                 <br>

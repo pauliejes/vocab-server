@@ -16,7 +16,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 
-from .forms import RegisterForm, IRIForm, SearchForm, RequiredFormSet
+from .forms import RegisterForm, IRIForm, SearchForm, RequiredFormSet, VocabularyForm
 from .models import RegisteredIRI, UserProfile
 from .tasks import notify_user
 
@@ -92,24 +92,22 @@ def createVocab(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = IRIForm(request.POST)
+        form = VocabularyForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            # domain = form.cleaned_data['domain']
-            # resourceType = form.cleaned_data['resourceType']
-            vocabulary = form.cleaned_data['vocabulary']
-            termType = form.cleaned_data['termType']
-            term = form.cleaned_data['term']
+            vocabName = form.cleaned_data['vocabName']
+            vocabIRI = form.cleaned_data['vocabIRI']
+            print "hi andy", vocabIRI, vocabName
             # redirect to a new URL:
-            return HttpResponseRedirect('vocabReceived', form.cleaned_data)
+            return HttpResponseRedirect(reverse('rdfaResults'))
 
     # if a GET (or any other method) we'll create a blank form
     # starting at the vocab portion of the iri
     else:
-        form = IRIForm()
+        form = VocabularyForm()
 
-    return render(request, 'createVocab.html', {'form': form})
+    return render(request, 'rdfaForm.html', {'form': form})
 
 @login_required
 @require_http_methods(["GET"])
@@ -188,3 +186,10 @@ def logout_view(request):
 @require_http_methods(["GET"])
 def rdfaForm(request):
     return render(request, 'rdfaForm.html')
+
+@csrf_protect
+@login_required()
+@require_http_methods(["GET"])
+def rdfaResults(request):
+    # results = RegisteredIRI.objects.filter()
+    return render(request, 'rdfaResults.html')

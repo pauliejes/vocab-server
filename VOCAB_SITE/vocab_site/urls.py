@@ -33,4 +33,5 @@ urlpatterns = [
     url(r'^rdfaForm$', views.rdfaForm, name="rdfaForm"),
     # url(r'^vocabReceived$', views.vocabReceived, name="vocabReceived"),
     url(r'^userProfile$', views.userProfile, name="userProfile"),
+    url(r'^rdfaResults$', views.rdfaResults, name="rdfaResults"),
 ]

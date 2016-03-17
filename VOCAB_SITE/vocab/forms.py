@@ -45,3 +45,8 @@ class RequiredFormSet(BaseFormSet):
         super(RequiredFormSet, self).__init__(*args, **kwargs)
         for form in self.forms:
             form.empty_permitted = False
+
+class VocabularyForm(forms.Form):
+    vocabName = forms.CharField(label='Vocabulary Name', max_length=100)
+    vocabIRI = forms.URLField(label='Vocabulary IRI', max_length=100)
+    
