@@ -18,7 +18,7 @@ from django.views.decorators.http import require_http_methods
 
 from .forms import RegisterForm, RegisteredIRIForm, SearchForm, RequiredFormSet
 from .models import RegisteredIRI, UserProfile
-from .tasks import notify_user
+from .tasks import notify_user, update_htaccess
 
 logger = logging.getLogger(__name__)
 
@@ -148,6 +148,7 @@ def searchResults(request):
 def iriCreationResults(request):
     return render(request, 'iriCreationResults.html')
 
+@csrf_protect
 @login_required()
 @require_http_methods(["GET", "POST"])
 @transaction.atomic
@@ -168,10 +169,12 @@ def adminIRIs(request):
                 if request.POST['action'] == "Accept":
                     iri.accepted = True
                     iri.reviewed = True
+                    update_htaccess.delay("fake title", iri.vocabulary, "http://jsonld-redirect", "http://html-redirect")
+                    # update_htaccess(iri.return_address())
                 else:
                     iri.reviewed = True
                 iri.save()
-                notify_user.delay(iri.return_address(), iri.userprofile.user.email, iri.accepted)
+                # notify_user.delay(iri.return_address(), iri.userprofile.user.email, iri.accepted)
         return render(request, 'adminIRIs.html', {"iris": iris})
     else:
         return HttpResponseForbidden()
