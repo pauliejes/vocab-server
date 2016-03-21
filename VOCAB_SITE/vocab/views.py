@@ -17,7 +17,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 
 from .forms import RegisterForm, IRIForm, SearchForm, RequiredFormSet, VocabularyForm
-from .models import RegisteredIRI, UserProfile
+from .models import RegisteredIRI, UserProfile, Vocabulary
 from .tasks import notify_user
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ def createIRI(request):
                     termType = form.cleaned_data['termType']
                     term = form.cleaned_data['term']
                     profile = UserProfile.objects.get(user=request.user)
-                    iriobj = RegisteredIRI.objects.create(vocabulary=vocabulary, term_type=termType, term=term, userprofile=profile)
+                    iriobj = RegisteredIRI.objects.create(vocab=vocabulary, term_type=termType, term=term, userprofile=profile)
             return HttpResponseRedirect(reverse('iriCreationResults'))
             # redirect to a new URL:
     # if a GET (or any other method) we'll create a blank form
@@ -99,8 +99,9 @@ def createVocab(request):
             vocabName = form.cleaned_data['vocabName']
             vocabIRI = form.cleaned_data['vocabIRI']
             print "hi andy", vocabIRI, vocabName
+            vocabobj = Vocabulary.objects.create(name=vocabName, iri=vocabIRI, user=request.user)
             # redirect to a new URL:
-            return HttpResponseRedirect(reverse('rdfaResults'))
+            return HttpResponseRedirect(reverse('rdfaResults'), {'vocabid': vocabobj.pk})
 
     # if a GET (or any other method) we'll create a blank form
     # starting at the vocab portion of the iri
@@ -160,7 +161,7 @@ def adminIRIs(request):
             term_type = request.POST['hidden-term_type']
             term = request.POST['hidden-term']
             try:
-                iri = RegisteredIRI.objects.get(vocabulary=vocabulary, term_type=term_type, term=term)
+                iri = RegisteredIRI.objects.get(vocab=vocabulary, term_type=term_type, term=term)
             except RegisteredIRI.DoesNotExist as dne:
                 logger.exception(dne.message)
             else:

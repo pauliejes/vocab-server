@@ -17,7 +17,7 @@ class UserProfile(models.Model):
 		return json.dumps({"user": self.user.username, "registeredIRIs": [iri.return_address() for iri in self.registerediri_set.all()]})
 
 class RegisteredIRI(models.Model):
-	vocabulary = models.CharField(max_length=50)
+	vocab = models.OneToOneField(Vocabulary, null=True, on_delete=models.SET_NULL)
 	term_type = models.CharField(max_length=50, blank=True, null=True)
 	term = models.CharField(max_length=50, blank=True, null=True)
 	accepted = models.BooleanField(default=False)
@@ -32,7 +32,7 @@ class RegisteredIRI(models.Model):
 		return settings.IRI_DOMAIN + self.vocabulary
 
 	class Meta:
-		unique_together = ("vocabulary", "term_type", "term")
+		unique_together = ("vocab", "term_type", "term")
 
 	def save(self, *args, **kwargs):
 		if self.term and not self.term_type:
@@ -49,7 +49,9 @@ def iri_post_save(sender, **kwargs):
 
 class Vocabulary(models.Model):
 	name = models.CharField(max_length=250)
-	iri = models.CharField(max_length=250)
+	iri = models.CharField(max_length=50)
+	user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+	editorialNote = models.TextField()
 
 	def __unicode__(self):
 		return "%s:%s" % (self.id, self.name)
