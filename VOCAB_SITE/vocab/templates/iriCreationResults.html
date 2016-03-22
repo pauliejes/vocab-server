@@ -1,5 +1,4 @@
 {% extends "master.html" %}
-
 {% block extra_css %}
 <!-- This line holds stylesheets for individual pages if needed -->
 {% load static %}
@@ -8,8 +7,8 @@
 
 {% block content %}
 <div class="row content">
-    <p>you did not create a term, but we did trick this info out of you: {{newiri}} {{data.vocabulary}} {{data.termType}} {{data.term}}<br></p>
-    <p class="para">Welcome to the Create IRI Page.  Here you can access and submit the form to request a persistant IRI.  Have fun!</p>
+    <p>You submitted a new IRI to be created: {{ newiri }}. The review process takes at least 24 hours. You will be notified when the IRI has been
+    accepted or denied.</p>
     <hr>
 </div>
 {% endblock content %}

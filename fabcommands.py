@@ -32,6 +32,7 @@ def setup_project():
     local('./VOCAB_SITE/manage.py makemigrations vocab')
     local('./VOCAB_SITE/manage.py migrate')
     local('./VOCAB_SITE/manage.py createsuperuser')
+    local('./VOCAB_SITE/manage.py loaddata initial.json')
 
     # Add settings module so fab file can see it
     os.environ['DJANGO_SETTINGS_MODULE'] = "vocab_site.settings"

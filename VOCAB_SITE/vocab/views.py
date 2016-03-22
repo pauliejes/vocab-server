@@ -46,8 +46,7 @@ def createIRI(request):
                     term = form.cleaned_data['term']
                     profile = UserProfile.objects.get(user=request.user)
                     iriobj = RegisteredIRI.objects.create(vocabulary=vocabulary, term_type=termType, term=term, userprofile=profile)
-            return HttpResponseRedirect(reverse('iriCreationResults'), {'newiri': iriobj.return_address(), 'data': form.cleaned_data})
-            # redirect to a new URL:
+            return render(request, 'iriCreationResults.html', {'newiri': iriobj.return_address()})
     # if a GET (or any other method) we'll create a blank form
     else:
         formset = RegisteredIRIFormset()
@@ -61,6 +60,8 @@ def createUser(request):
         form = RegisterForm()
         return render(request, 'createUser.html', {"form": form})
     elif request.method == 'POST':
+        import pdb
+        pdb.set_trace()
         form = RegisterForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['username']
@@ -70,7 +71,8 @@ def createUser(request):
             if not User.objects.filter(username__exact=name).count():
                 # if email doesn't already exist
                 if not User.objects.filter(email__exact=email).count():
-                    User.objects.create_user(name, email, pword)
+                    user = User.objects.create_user(name, email, pword)
+                    UserProfile.objects.create(user=user)
                 else:
                     return render(request, 'createUser.html', {"form": form, "error_message": "Email %s is already registered." % email})
             else:
@@ -120,33 +122,15 @@ def userProfile(request):
 @require_http_methods(["GET", "POST"])
 def searchResults(request):
     if request.method == 'POST':
-        query = None
-        iris = None
         form = SearchForm(request.POST)
         if form.is_valid:
-            if form.data['vocabulary']:
-                query = Q(vocabulary__contains=form.data['vocabulary'])
-            if form.data['term_type']:
-                if query:
-                    query = query | Q(term_type__contains=form.data['term_type'])
-                else:
-                    query = Q(term_type__contains=form.data['term_type'])
-            if form.data['term']:
-                if query:
-                    query = query | Q(term__contains=form.data['term'])
-                else:
-                    query = Q(term__contains=form.data['term'])
-            if query:
-                iris = RegisteredIRI.objects.filter(query & Q(accepted=True))
+            query = Q(vocabulary__contains=form.data['search_term']) | Q(term_type__contains=form.data['search_term']) \
+                | Q(term__contains=form.data['search_term'])
+            iris = RegisteredIRI.objects.filter(query & Q(accepted=True))
         return render(request, 'searchResults.html', {"form":form, "iris":iris})
     else:
         form = SearchForm()
     return render(request, 'searchResults.html', {"form":form})
-
-@login_required()
-@require_http_methods(["GET"])
-def iriCreationResults(request):
-    return render(request, 'iriCreationResults.html')
 
 @csrf_protect
 @login_required()
@@ -170,11 +154,10 @@ def adminIRIs(request):
                     iri.accepted = True
                     iri.reviewed = True
                     update_htaccess.delay("fake title", iri.vocabulary, "http://jsonld-redirect", "http://html-redirect")
-                    # update_htaccess(iri.return_address())
                 else:
                     iri.reviewed = True
                 iri.save()
-                # notify_user.delay(iri.return_address(), iri.userprofile.user.email, iri.accepted)
+                notify_user.delay(iri.return_address(), iri.userprofile.user.email, iri.accepted)
         return render(request, 'adminIRIs.html', {"iris": iris})
     else:
         return HttpResponseForbidden()

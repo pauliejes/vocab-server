@@ -28,7 +28,7 @@ class ContactForm(forms.Form):
     cc_myself = forms.BooleanField(required=False)
 
 class SearchForm(forms.Form):
-    search_term = forms.CharField(label='Search:', max_length=40)
+    search_term = forms.CharField(label='Search:', max_length=100)
 
 class RegisteredIRIForm(ModelForm):
     class Meta:

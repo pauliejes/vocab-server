@@ -11,7 +11,9 @@
 		"pk": 1,
 		"fields": {
 			"vocabulary": "adl",
-			"userprofile": 1
+			"userprofile": 1,
+			"accepted": true,
+			"reviewed": true
 		}
 	},
 	{
@@ -19,7 +21,9 @@
 		"pk": 2,
 		"fields": {
 			"vocabulary": "acrossx",
-			"userprofile": 1
+			"userprofile": 1,
+			"accepted": true,
+			"reviewed": true			
 		}
 	},
 	{
@@ -27,7 +31,9 @@
 		"pk": 3,
 		"fields": {
 			"vocabulary": "adb",
-			"userprofile": 1
+			"userprofile": 1,
+			"accepted": true,
+			"reviewed": true			
 		}
 	}
 ]

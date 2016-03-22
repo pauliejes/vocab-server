@@ -46,6 +46,29 @@ EMAIL_HOST_PASSWORD = '$c0rmR0ck$'
 EMAIL_USE_SSL = True
 EMAIL_TIMEOUT = 10
 
+
+HTACCESS_SECTION_TEMPLATE = """
+\n
+# OURTITLEREPLACEMENT Vocabulary
+# ---------------------------
+# OURTITLEREPLACEMENT vocabualry rewrite rule to serve JSON-LD if requested
+RewriteCond %{HTTP_ACCEPT} application/ld\+json
+RewriteRule ^OURVOCABREPLACEMENT/?$ OURJSONLDREDIRECTREPLACEMENT [R=303]
+RewriteRule ^OURVOCABREPLACEMENT/([a-z-]*)$ OURJSONLDREDIRECTREPLACEMENT [R=303]
+RewriteRule ^OURVOCABREPLACEMENT/([a-z-]*)/([a-z-]*)$ OURJSONLDREDIRECTREPLACEMENT [R=303]
+
+# Rewrite rule to serve HTML content if requested
+RewriteCond %{HTTP_ACCEPT} !application/rdf\+xml.*(text/html|application/xhtml\+xml)
+RewriteCond %{HTTP_ACCEPT} text/html [OR]
+RewriteCond %{HTTP_ACCEPT} application/xhtml\+xml [OR]
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/.*
+RewriteRule ^OURVOCABREPLACEMENT/?$ OURHTMLREDIRECTREPLACEMENT [R=303]
+RewriteRule ^OURVOCABREPLACEMENT/([a-z-]+)$ OURHTMLREDIRECTREPLACEMENT/#$1 [R=303,NE]
+RewriteRule ^OURVOCABREPLACEMENT/([a-z-]+)/([a-z-]+)$ OURHTMLREDIRECTREPLACEMENT/#$2 [R=303,NE]
+"""
+
+
+
 # Application definition
 
 INSTALLED_APPS = [

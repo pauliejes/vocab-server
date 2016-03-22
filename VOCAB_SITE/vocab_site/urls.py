@@ -29,7 +29,6 @@ urlpatterns = [
     url(r'^createUser$', views.createUser, name="createUser"),
     url(r'^createVocab$', views.createVocab, name="createVocab"),
     url(r'^searchResults$', views.searchResults, name="searchResults"),
-    url(r'^iriCreationResults$', views.iriCreationResults, name="iriCreationResults"),
     # url(r'^vocabReceived$', views.vocabReceived, name="vocabReceived"),
     url(r'^userProfile$', views.userProfile, name="userProfile"),
 ]
