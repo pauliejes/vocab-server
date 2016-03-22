@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.formsets import BaseFormSet
+from .models import Vocabulary
 
 class RegisterForm(forms.Form):
     username = forms.CharField(max_length=200, label='Name')
@@ -46,7 +47,10 @@ class RequiredFormSet(BaseFormSet):
         for form in self.forms:
             form.empty_permitted = False
 
-class VocabularyForm(forms.Form):
-    vocabName = forms.CharField(label='Vocabulary Name', max_length=100)
-    vocabIRI = forms.URLField(label='Vocabulary IRI', max_length=100)
-    
+class VocabularyForm(forms.ModelForm):
+    # vocabName = forms.CharField(label='Vocabulary Name', max_length=100)
+    # vocabIRI = forms.URLField(label='Vocabulary IRI', max_length=100)
+    class Meta:
+        model = Vocabulary
+        # fields = '__all__'
+        exclude = ['user']

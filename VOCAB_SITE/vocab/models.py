@@ -17,7 +17,7 @@ class UserProfile(models.Model):
 		return json.dumps({"user": self.user.username, "registeredIRIs": [iri.return_address() for iri in self.registerediri_set.all()]})
 
 class RegisteredIRI(models.Model):
-	vocab = models.OneToOneField(Vocabulary, null=True, on_delete=models.SET_NULL)
+	vocab = models.CharField(max_length=250)
 	term_type = models.CharField(max_length=50, blank=True, null=True)
 	term = models.CharField(max_length=50, blank=True, null=True)
 	accepted = models.BooleanField(default=False)
@@ -27,9 +27,9 @@ class RegisteredIRI(models.Model):
 	def return_address(self):
 		if self.term_type:
 			if self.term:
-				return settings.IRI_DOMAIN + "/".join([self.vocabulary, self.term_type, self.term])
-			return settings.IRI_DOMAIN + "/".join([self.vocabulary, self.term_type])
-		return settings.IRI_DOMAIN + self.vocabulary
+				return settings.IRI_DOMAIN + "/".join([self.vocab, self.term_type, self.term])
+			return settings.IRI_DOMAIN + "/".join([self.vocab, self.term_type])
+		return settings.IRI_DOMAIN + self.vocab
 
 	class Meta:
 		unique_together = ("vocab", "term_type", "term")
@@ -49,7 +49,7 @@ def iri_post_save(sender, **kwargs):
 
 class Vocabulary(models.Model):
 	name = models.CharField(max_length=250)
-	iri = models.CharField(max_length=50)
+	iri = models.OneToOneField(RegisteredIRI, blank=True, null=True, on_delete=models.SET_NULL)
 	user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 	editorialNote = models.TextField()
 

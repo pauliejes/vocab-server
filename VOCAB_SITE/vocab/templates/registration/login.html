@@ -11,7 +11,7 @@
     <p class="para">Welcome to the Login Page.  If you want to play along, you must provide sufficient information to sign up such that we are convinced that should you not play along with our rules we can track you down and find you.  Watching you!</p>
     <hr>
 
-    <form action="{% url 'login' %}" method="post">
+    <form action="{% url 'vocab:login' %}" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Submit" />

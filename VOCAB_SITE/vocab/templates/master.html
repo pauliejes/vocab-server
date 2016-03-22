@@ -30,32 +30,31 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{% url 'home' %}"><img height="35" width="55" src="{% static "vocab/img/test.png" %}"/></a>
+      <a class="navbar-brand" href="{% url 'vocab:home' %}"><img height="35" width="55" src="{% static "vocab/img/test.png" %}"/></a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li id="home"><a href="{% url 'home' %}">Home</a></li>
-        <li id="createIRI"><a href="{% url 'createIRI' %}">Create IRI</a></li>
-        <li id="createVocab"><a href="{% url 'createVocab' %}">Create Vocabulary</a></li>
-        <li id="createUser"><a href="{% url 'createUser' %}">Create New User</a></li>
-        <li id="userProfile"><a href="{% url 'userProfile' %}">View User Profile</a></li>
-        <li id="searchResults"><a href="{% url 'searchResults' %}">Search Results</a></li>
-        <li id="rdfaForm"><a href="{% url 'rdfaForm' %}">ADL Vocabulary</a></li>
+        <li id="home"><a href="{% url 'vocab:home' %}">Home</a></li>
+        <li id="createIRI"><a href="{% url 'vocab:createIRI' %}">Create IRI</a></li>
+        <li id="createVocab"><a href="{% url 'vocab:vocabularyForm' %}">Create Vocabulary</a></li>
+        <li id="createUser"><a href="{% url 'vocab:createUser' %}">Create New User</a></li>
+        <li id="userProfile"><a href="{% url 'vocab:userProfile' %}">View User Profile</a></li>
+        <li id="searchResults"><a href="{% url 'vocab:searchResults' %}">Search Results</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
           <div class="input-group col-sm-4">
               <input type="text" class="form-control" placeholder="Search Registry...">
               <span class="input-group-btn">
-                  <button class="btn btn-default" type="button" href="{% url 'searchResults' %}" %}">
+                  <button class="btn btn-default" type="button" href="{% url 'vocab:searchResults' %}" %}">
                       <span class="glyphicon glyphicon-search"></span>
                   </button>
               </span>
           </div>
         {% if user.is_authenticated %}
-        <li><a href="{% url 'userProfile' %}">{{ user.username }}</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
+        <li><a href="{% url 'vocab:userProfile' %}">{{ user.username }}</a></li>
+        <li><a href="{% url 'vocab:logout' %}">Logout</a></li>
         {% else %}
-        <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-log-in"></span> Account Login </a></li>
+        <li><a href="{% url 'vocab:login' %}"><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-log-in"></span> Account Login </a></li>
         {% endif %}
       </ul>
     </div>

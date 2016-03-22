@@ -9,7 +9,7 @@
 {% block content %}
 <div id="iriforms">
 	{% for iri in iris %}
-    <form action="{% url 'adminIRIs' %}" method="post">
+    <form action="{% url 'vocab:adminIRIs' %}" method="post">
         {% csrf_token %}
         <label for="hidden">{{ iri.return_address }}</label>
         <input type="hidden" name="hidden-vocabulary" value="{{ iri.vocabulary }}"/>

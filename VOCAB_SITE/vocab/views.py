@@ -42,9 +42,10 @@ def createIRI(request):
             for form in formset:
                 if form.is_valid():
                     vocabulary = form.cleaned_data['vocabulary']
+                    # vocab = Vocabulary.objects.create
                     termType = form.cleaned_data['termType']
                     term = form.cleaned_data['term']
-                    profile = UserProfile.objects.get(user=request.user)
+                    # profile = UserProfile.objects.get(user=request.user)
                     iriobj = RegisteredIRI.objects.create(vocab=vocabulary, term_type=termType, term=term, userprofile=profile)
             return HttpResponseRedirect(reverse('iriCreationResults'))
             # redirect to a new URL:
@@ -88,7 +89,7 @@ def createUser(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 @transaction.atomic
-def createVocab(request):
+def vocabularyForm(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -96,19 +97,20 @@ def createVocab(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            vocabName = form.cleaned_data['vocabName']
-            vocabIRI = form.cleaned_data['vocabIRI']
+            vocabName = form.cleaned_data['name']
+            vocabIRI = form.cleaned_data['iri']
             print "hi andy", vocabIRI, vocabName
             vocabobj = Vocabulary.objects.create(name=vocabName, iri=vocabIRI, user=request.user)
             # redirect to a new URL:
-            return HttpResponseRedirect(reverse('rdfaResults'), {'vocabid': vocabobj.pk})
+            print reverse('vocab:vocabulary', args=('adl',))
+            return HttpResponseRedirect(reverse('vocab:vocabulary', args=(vocabIRI.vocab,)))
 
     # if a GET (or any other method) we'll create a blank form
     # starting at the vocab portion of the iri
     else:
         form = VocabularyForm()
 
-    return render(request, 'rdfaForm.html', {'form': form})
+    return render(request, 'vocabularyForm.html', {'form': form})
 
 @login_required
 @require_http_methods(["GET"])
@@ -182,15 +184,17 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('home'))
 
-@csrf_protect
-@login_required()
-@require_http_methods(["GET"])
-def rdfaForm(request):
-    return render(request, 'rdfaForm.html')
+# @csrf_protect
+# @login_required()
+# @require_http_methods(["GET"])
+# def rdfaForm(request):
+#     return render(request, 'rdfaForm.html')
 
 @csrf_protect
 @login_required()
 @require_http_methods(["GET"])
-def rdfaResults(request):
-    # results = RegisteredIRI.objects.filter()
-    return render(request, 'rdfaResults.html')
+def vocabulary(request, vocab_name):
+    print vocab_name
+    dispV = Vocabulary.objects.get(name=vocab_name)
+    print dispV
+    return render(request, 'vocabulary.html', {'vocab':vocab_name})

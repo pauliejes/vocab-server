@@ -12,7 +12,7 @@
     <p class="para">Welcome to the Create IRI Page.  Here you can access and submit the form to request a persistant IRI.  Have fun!</p>
     <hr>
 
-    <form action="{% url 'createIRI' %}" class="form-inline" method="post">
+    <form action="{% url 'vocab:createIRI' %}" class="form-inline" method="post">
         {% csrf_token %}
         {{ formset.management_form }}
         <div class="forms">
