@@ -52,6 +52,7 @@ class Vocabulary(models.Model):
 	iri = models.OneToOneField(RegisteredIRI, blank=True, null=True, on_delete=models.SET_NULL)
 	user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 	editorialNote = models.TextField()
+	# what about copName, copUrl, dateCreated, dateModified, revisionNum, numTerms
 
 	def __unicode__(self):
 		return "%s:%s" % (self.id, self.name)
