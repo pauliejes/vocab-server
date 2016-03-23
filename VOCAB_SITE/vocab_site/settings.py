@@ -36,7 +36,7 @@ LOGIN_REDIRECT_URL = '/userProfile'
 
 #For mail_admins
 SERVER_EMAIL = 'adlvocab@gmail.com'
-ADMINS = [('Lou', 'lou.wolford.ctr@adlnet.gov')]
+ADMINS = [('Andy', 'cr8onski@gmail.com')]
 
 # If not specified, EMAIL_BACKEND will default to the SMTP backend. Here are the following arguments for that
 EMAIL_HOST = 'smtp.gmail.com'
@@ -122,8 +122,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'vocab',
-        'USER': 'vsadmin',
-        'PASSWORD': 'password',
+        'USER': 'andy',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '',
         # 'ATOMIC_REQUESTS': 'True',

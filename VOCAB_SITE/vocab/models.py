@@ -22,7 +22,7 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 	def __unicode__(self):
-		return json.dumps({"user": self.user.username, "registeredIRIs": [iri.return_address() for iri in self.registerediri_set.all()]})	
+		return json.dumps({"user": self.user.username, "registeredIRIs": [iri.return_address() for iri in self.registerediri_set.all()]})
 
 class RegisteredIRI(models.Model):
 	vocabulary = models.CharField(max_length=50)
@@ -35,12 +35,12 @@ class RegisteredIRI(models.Model):
 	def return_address(self):
 		if self.term_type:
 			if self.term:
-				return settings.IRI_DOMAIN + "/".join([self.vocabulary, self.term_type, self.term])
-			return settings.IRI_DOMAIN + "/".join([self.vocabulary, self.term_type])
-		return settings.IRI_DOMAIN + self.vocabulary
+				return settings.IRI_DOMAIN + "/".join([self.vocab, self.term_type, self.term])
+			return settings.IRI_DOMAIN + "/".join([self.vocab, self.term_type])
+		return settings.IRI_DOMAIN + self.vocab
 
 	class Meta:
-		unique_together = ("vocabulary", "term_type", "term")
+		unique_together = ("vocab", "term_type", "term")
 
 	def save(self, *args, **kwargs):
 		if self.term and not self.term_type:
@@ -54,3 +54,20 @@ class RegisteredIRI(models.Model):
 def iri_post_save(sender, **kwargs):
 	if kwargs['created']:
 		notify_admins.delay(kwargs['instance'].return_address())
+
+class Vocabulary(models.Model):
+	name = models.CharField(max_length=250)
+	iri = models.OneToOneField(RegisteredIRI, blank=True, null=True, on_delete=models.SET_NULL)
+	user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+	editorialNote = models.TextField()
+	# what about copName, copUrl, dateCreated, dateModified, revisionNum, numTerms
+
+	def __unicode__(self):
+		return "%s:%s" % (self.id, self.name)
+
+class Term(models.Model):
+	name = models.CharField(max_length=250)
+	vocabulary = models.ForeignKey(Vocabulary)
+
+	def __unicode__(self):
+		return "%s:%s" % (self.id, self.name)

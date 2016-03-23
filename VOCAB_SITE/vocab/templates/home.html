@@ -13,8 +13,8 @@
     <p class="para" id="p4">For Phase 1, emphasis is placed on establishing the ability to create a persistent IRI which will allow the creation of vocabularyies and terms. Therefore at this point Searching is disabled, please check back in the future.</p>
     <hr>
     Please Choose a Button:<br>
-    <a type="button" class="btn btn-info" href="{% url 'createIRI' %}" role="button" name="createButton">Create</a>
-    <a type="button" class="btn btn-info" href="{% url 'searchResults' %}" role="button" name="searchButton" disabled="true">Search</a>
+    <a type="button" class="btn btn-info" href="{% url 'vocab:createIRI' %}" role="button" name="createButton">Create</a>
+    <a type="button" class="btn btn-info" href="{% url 'vocab:searchResults' %}" role="button" name="searchButton">Search</a>
 </div>
 {% endblock content %}
 

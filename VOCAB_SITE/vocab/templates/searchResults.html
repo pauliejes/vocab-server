@@ -10,7 +10,7 @@
 <div class="row content">
     <p class="para">Welcome to the Search Results Page.  Below you should find all the words in all the world.  You asked for it, you got it!</p>
     <hr>
-        <form class="" role="form" action="{% url 'searchResults' %}" method="post">
+        <form class="" role="form" action="{% url 'vocab:searchResults' %}" method="post">
         {% csrf_token %}
         {{ form.non_field_errors }}
         <!-- set this aside for a moment and try something different below this line which works -->

@@ -16,8 +16,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 
-from .forms import RegisterForm, RegisteredIRIForm, SearchForm, RequiredFormSet
-from .models import RegisteredIRI, UserProfile
+from .forms import RegisterForm, RegisteredIRIForm, SearchForm, RequiredFormSet, VocabularyForm
+from .models import RegisteredIRI, UserProfile, Vocabulary
 from .tasks import notify_user, update_htaccess
 
 logger = logging.getLogger(__name__)
@@ -42,11 +42,20 @@ def createIRI(request):
             for form in formset:
                 if form.is_valid():
                     vocabulary = form.cleaned_data['vocabulary']
+
                     termType = form.cleaned_data['term_type']
                     term = form.cleaned_data['term']
                     profile = UserProfile.objects.get(user=request.user)
                     iriobj = RegisteredIRI.objects.create(vocabulary=vocabulary, term_type=termType, term=term, userprofile=profile)
             return render(request, 'iriCreationResults.html', {'newiri': iriobj.return_address()})
+            #         # vocab = Vocabulary.objects.create
+            #         termType = form.cleaned_data['termType']
+            #         term = form.cleaned_data['term']
+            #         # profile = UserProfile.objects.get(user=request.user)
+            #         iriobj = RegisteredIRI.objects.create(vocab=vocabulary, term_type=termType, term=term, userprofile=profile)
+            # return HttpResponseRedirect(reverse('iriCreationResults'))
+            # # redirect to a new URL:
+
     # if a GET (or any other method) we'll create a blank form
     else:
         formset = RegisteredIRIFormset()
@@ -60,8 +69,6 @@ def createUser(request):
         form = RegisterForm()
         return render(request, 'createUser.html', {"form": form})
     elif request.method == 'POST':
-        import pdb
-        pdb.set_trace()
         form = RegisterForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['username']
@@ -90,28 +97,28 @@ def createUser(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 @transaction.atomic
-def createVocab(request):
+def vocabularyForm(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = RegisteredIRIForm(request.POST)
+        form = VocabularyForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            # domain = form.cleaned_data['domain']
-            # resourceType = form.cleaned_data['resourceType']
-            vocabulary = form.cleaned_data['vocabulary']
-            termType = form.cleaned_data['termType']
-            term = form.cleaned_data['term']
+            vocabName = form.cleaned_data['name']
+            vocabIRI = form.cleaned_data['iri']
+            print "hi andy", vocabIRI, vocabName
+            vocabobj = Vocabulary.objects.create(name=vocabName, iri=vocabIRI, user=request.user)
             # redirect to a new URL:
-            return HttpResponseRedirect('vocabReceived', form.cleaned_data)
+            print reverse('vocab:vocabulary', args=('adl',))
+            return HttpResponseRedirect(reverse('vocab:vocabulary', args=(vocabIRI.vocab,)))
 
     # if a GET (or any other method) we'll create a blank form
     # starting at the vocab portion of the iri
     else:
-        form = RegisteredIRIForm()
+        form = VocabularyForm()
 
-    return render(request, 'createVocab.html', {'form': form})
+    return render(request, 'vocabularyForm.html', {'form': form})
 
 @login_required
 @require_http_methods(["GET"])
@@ -132,7 +139,12 @@ def searchResults(request):
         form = SearchForm()
     return render(request, 'searchResults.html', {"form":form})
 
-@csrf_protect
+@login_required()
+@require_http_methods(["GET"])
+def iriCreationResults(request):
+    results = RegisteredIRI.objects.filter(userprofile__user = request.user)
+    return render(request, 'iriCreationResults.html', {'iris':results})
+
 @login_required()
 @require_http_methods(["GET", "POST"])
 @transaction.atomic
@@ -146,7 +158,7 @@ def adminIRIs(request):
             term_type = request.POST['hidden-term_type']
             term = request.POST['hidden-term']
             try:
-                iri = RegisteredIRI.objects.get(vocabulary=vocabulary, term_type=term_type, term=term)
+                iri = RegisteredIRI.objects.get(vocab=vocabulary, term_type=term_type, term=term)
             except RegisteredIRI.DoesNotExist as dne:
                 logger.exception(dne.message)
             else:
@@ -167,3 +179,18 @@ def adminIRIs(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('home'))
+
+# @csrf_protect
+# @login_required()
+# @require_http_methods(["GET"])
+# def rdfaForm(request):
+#     return render(request, 'rdfaForm.html')
+
+@csrf_protect
+@login_required()
+@require_http_methods(["GET"])
+def vocabulary(request, vocab_name):
+    print vocab_name
+    dispV = Vocabulary.objects.get(name=vocab_name)
+    print dispV
+    return render(request, 'vocabulary.html', {'vocab':vocab_name})
