@@ -25,7 +25,7 @@ class UserProfile(models.Model):
 		return json.dumps({"user": self.user.username, "registeredIRIs": [iri.return_address() for iri in self.registerediri_set.all()]})
 
 class RegisteredIRI(models.Model):
-	vocabulary = models.CharField(max_length=50)
+	vocabulary_path = models.CharField(max_length=50)
 	term_type = models.CharField(max_length=15, blank=True, choices=TERM_TYPE_CHOICES)
 	term = models.CharField(max_length=50, blank=True)
 	accepted = models.BooleanField(default=False)
@@ -35,12 +35,12 @@ class RegisteredIRI(models.Model):
 	def return_address(self):
 		if self.term_type:
 			if self.term:
-				return settings.IRI_DOMAIN + "/".join([self.vocab, self.term_type, self.term])
-			return settings.IRI_DOMAIN + "/".join([self.vocab, self.term_type])
-		return settings.IRI_DOMAIN + self.vocab
+				return settings.IRI_DOMAIN + "/".join([self.vocabulary_path, self.term_type, self.term])
+			return settings.IRI_DOMAIN + "/".join([self.vocabulary_path, self.term_type])
+		return settings.IRI_DOMAIN + self.vocabulary_path
 
 	class Meta:
-		unique_together = ("vocab", "term_type", "term")
+		unique_together = ("vocabulary_path", "term_type", "term")
 
 	def save(self, *args, **kwargs):
 		if self.term and not self.term_type:
@@ -55,7 +55,7 @@ def iri_post_save(sender, **kwargs):
 	if kwargs['created']:
 		notify_admins.delay(kwargs['instance'].return_address())
 
-class Vocabulary(models.Model):
+class VocabularyData(models.Model):
 	name = models.CharField(max_length=250)
 	iri = models.OneToOneField(RegisteredIRI, blank=True, null=True, on_delete=models.SET_NULL)
 	user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
