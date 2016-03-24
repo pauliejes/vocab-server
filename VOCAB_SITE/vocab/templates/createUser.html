@@ -1,0 +1,27 @@
+{% extends "master.html" %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="row content">
+    <p class="para">Welcome to the Create User Page.  Here you can access and submit the form to create a user account with this page.  Mazel Tov!</p>
+    <hr>
+    {% if error_message %}
+      <ul>
+        <li>{{ error_message }}</li>
+      </ul>
+    {% endif %}
+    <form class="" role="form" action="{% url 'vocab:createUser' %}" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <!-- set this aside for a moment and try something different below this line which works -->
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+    </form>
+    <hr>
+</div>
+{% endblock content %}

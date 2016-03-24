@@ -1,0 +1,29 @@
+{% extends "master.html" %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div id="iriforms">
+	{% for iri in iris %}
+    <form action="{% url 'vocab:adminIRIs' %}" method="post">
+        {% csrf_token %}
+        <label for="hidden">{{ iri.return_address }}</label>
+        <input type="hidden" name="hidden-vocabulary_path" value="{{ iri.vocabulary_path }}"/>
+        <input type="hidden" name="hidden-term_type" value="{{ iri.term_type }}"/>
+        <input type="hidden" name="hidden-term" value="{{ iri.term }}"/>
+        <input type="submit" name="action" value="Accept" />
+		<input type="submit" name="action" value="Reject" />
+    </form>
+	{% empty %}
+	There are currently no pending IRIs.
+	{% endfor %}
+
+</div>
+
+{% endblock content %}
+{% block extra_js %}
+{% endblock extra_js %}

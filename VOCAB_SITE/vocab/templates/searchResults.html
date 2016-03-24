@@ -1,0 +1,29 @@
+{% extends "master.html" %}
+
+{% block extra_css %}
+<!-- This line holds stylesheets for individual pages if needed -->
+{% load static %}
+<link rel="stylesheet" href="{% static "vocab/css/home.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="row content">
+    <p class="para">Welcome to the Search Results Page.  Below you should find all the words in all the world.  You asked for it, you got it!</p>
+    <hr>
+        <form class="" role="form" action="{% url 'vocab:searchResults' %}" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <!-- set this aside for a moment and try something different below this line which works -->
+        {{ form.as_p }}
+        <input type="submit" value="Search" />
+    </form>
+    <hr>
+    <ul>
+    {% for iri in iris %}
+    <li>{{ iri.return_address }}</li>
+    {% empty %}
+    No Results
+    {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

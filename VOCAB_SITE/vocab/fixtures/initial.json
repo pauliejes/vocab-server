@@ -1,0 +1,39 @@
+[
+	{
+		"model": "vocab.UserProfile",
+		"pk": 1,
+		"fields": {
+			"user": 1
+		}
+	},
+	{
+		"model": "vocab.RegisteredIRI",
+		"pk": 1,
+		"fields": {
+			"vocabulary": "adl",
+			"userprofile": 1,
+			"accepted": true,
+			"reviewed": true
+		}
+	},
+	{
+		"model": "vocab.RegisteredIRI",
+		"pk": 2,
+		"fields": {
+			"vocabulary": "acrossx",
+			"userprofile": 1,
+			"accepted": true,
+			"reviewed": true			
+		}
+	},
+	{
+		"model": "vocab.RegisteredIRI",
+		"pk": 3,
+		"fields": {
+			"vocabulary": "adb",
+			"userprofile": 1,
+			"accepted": true,
+			"reviewed": true			
+		}
+	}
+]

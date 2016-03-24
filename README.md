@@ -4,7 +4,7 @@
 
 **Install Prerequisites**
 
-    admin:~$ sudo apt-get install git fabric postgresql python-setuptools postgresql-server-dev-all python-dev
+    admin:~$ sudo apt-get install git fabric postgresql python-setuptools postgresql-server-dev-all python-dev rabbitmq-server
     admin:~$ sudo easy_install pip
     admin:~$ sudo pip install virtualenv
 
@@ -54,8 +54,58 @@
 	Superuser created successfully.
 	...
 
+**Setup RabbitMQ**
+   
+   ```
+   admin:~$ sudo rabbitmqctl add_user <username_for_rabbitmq> <password_for_rabbitmq>
+   admin:~$ sudo rabbitmqctl add_vhost <vhost_name>
+   admin:~$ sudo rabbitmqctl set_permissions -p <vhost_name> <username_for_rabbitmq> ".*" ".*" ".*"
+   ```
+
+**Setup Celery**
+
+***Configure vocab/celery.py***
+
+    app = Celery('vocab',
+			broker='amqp://<username_for_rabbitmq>:<password_for_rabbitmq>@localhost:5672/<vhost_name>',
+			include=['vocab.tasks'])
+
+***Configure VOCAB_SITE/celeryd.conf***
+
+   ```
+   command=/path/to/vocab_container/env/bin/celery worker -A vocab --loglevel=DEBUG
+   directory=/path/to/vocab_container/vocab-server/VOCAB_SITE
+   stdout_logfile=/path/to/vocab_container/logs/celery/outworker.log
+   stderr_logfile=/path/to/vocab_container/logs/celery/errworker.log
+   ```
+
+***Configure VOCAB_SITE/supervisord.conf***
+
+   ```
+   logfile=/path/to/vocab_container/logs/supervisord/supervisord.log
+   childlogdir=/path/to/vocab_container/logs/supervisord/
+   ```
+
+***Create upstart script in `/etc/init` named vocab-email.conf***
+
+   ```
+   description    "supervisor for vocab-email"
+   start on runlevel    [2345]
+   stop on runlevel    [!2345]
+
+   respawn
+
+   setuid <your system username>
+   chdir /path/to/vocab_container/vocab-server/VOCAB_SITE
+   exec /path/to/vocab_container/env/bin/supervisord --nodaemon
+   ```
+
+Control celery tasks with: `sudo {start|stop|restart} vocab-email`. Every change done to any file involving celery (including tasks.py), requires a restart of the celery service.
+
 ## Starting
 
 While in the VOCAB_SITE directory, run
 
     (env)admin:$ python manage.py runserver
+
+
