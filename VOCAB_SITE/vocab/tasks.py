@@ -33,7 +33,7 @@ def notify_admins(iri):
 @shared_task
 def update_htaccess(title, vocab, json_redirect, html_redirect): 
     from .models import RegisteredIRI
-    vocab_already_registered = RegisteredIRI.objects.filter(vocabulary=vocab, accepted=True, reviewed=True)
+    vocab_already_registered = RegisteredIRI.objects.filter(vocabulary_path=vocab, accepted=True, reviewed=True)
 
     if not vocab_already_registered:
         unwritten = True

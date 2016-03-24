@@ -17,12 +17,13 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
-from vocab import views
+from . import views
 
 urlpatterns = [
-    url(r'^$', views.home, name="home"),
     url(r'^admin/', admin.site.urls),
-    url(r'^vocab/', include('vocab.urls')),
+    url(r'^vocab/', include('vocab.urls', namespace='vocab')),
+
+    url(r'^$', views.home, name="home"),
 
 #Are there any of these that we still need here or are we good??
     url(r'^accounts/login/$', auth_views.login, name="login"),

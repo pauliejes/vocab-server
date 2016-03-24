@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.forms.formsets import BaseFormSet
 
-from .models import RegisteredIRI, Vocabulary
+from .models import RegisteredIRI, VocabularyData
 
 class RegisterForm(forms.Form):
     username = forms.CharField(max_length=200, label='Name')
@@ -33,9 +33,9 @@ class SearchForm(forms.Form):
 class RegisteredIRIForm(ModelForm):
     class Meta:
         model = RegisteredIRI
-        fields = ['vocabulary', 'term_type', 'term']
+        fields = ['vocabulary_path', 'term_type', 'term']
         widgets = {
-            'vocabulary': forms.TextInput(attrs={'placeholder': 'Vocabulary/Profile', 'class': 'form-control'}),
+            'vocabulary_path': forms.TextInput(attrs={'placeholder': 'Vocabulary/Profile', 'class': 'form-control'}),
             'term_type': forms.Select(attrs={'class': 'form-control'}),
             'term': forms.TextInput(attrs={'placeholder': 'Term', 'class': 'form-control'})
         }
@@ -61,17 +61,17 @@ class RequiredFormSet(BaseFormSet):
         total = int(form.data['form-TOTAL_FORMS'])
         tuple_list = []
         for x in range(0, total):
-            data_tuple = (form.data['form-'+str(x)+'-vocabulary'], form.data['form-'+str(x)+'-term_type'], \
+            data_tuple = (form.data['form-'+str(x)+'-vocabulary_path'], form.data['form-'+str(x)+'-term_type'], \
                 form.data['form-'+str(x)+'-term'])
             if data_tuple in tuple_list:
                 raise forms.ValidationError("Forms cannot have the same triple values as other forms in the form set")
             else:
                 tuple_list.append(data_tuple)
 
-class VocabularyForm(forms.ModelForm):
+class VocabularyDataForm(forms.ModelForm):
     # vocabName = forms.CharField(label='Vocabulary Name', max_length=100)
     # vocabIRI = forms.URLField(label='Vocabulary IRI', max_length=100)
     class Meta:
-        model = Vocabulary
+        model = VocabularyData
         # fields = '__all__'
         exclude = ['user']

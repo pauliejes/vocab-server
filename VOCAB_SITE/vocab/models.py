@@ -57,17 +57,23 @@ def iri_post_save(sender, **kwargs):
 
 class VocabularyData(models.Model):
 	name = models.CharField(max_length=250)
-	iri = models.OneToOneField(RegisteredIRI, blank=True, null=True, on_delete=models.SET_NULL)
-	user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+	base_iri = models.OneToOneField(RegisteredIRI, blank=True, null=True, on_delete=models.SET_NULL)
 	editorialNote = models.TextField()
 	# what about copName, copUrl, dateCreated, dateModified, revisionNum, numTerms
 
 	def __unicode__(self):
-		return "%s:%s" % (self.id, self.name)
+		return "%s" % (self.id, self.name)
 
-class Term(models.Model):
+class TermTypeData(models.Model):
 	name = models.CharField(max_length=250)
-	vocabulary = models.ForeignKey(Vocabulary)
+	vocabulary_data = models.ForeignKey(VocabularyData)
 
 	def __unicode__(self):
-		return "%s:%s" % (self.id, self.name)
+		return "%s:%s" % (self.vocabulary_data.name, self.name)
+
+class TermData(models.Model):
+	name = models.CharField(max_length=250)
+	term_type_data = models.ForeignKey(TermTypeData)
+
+	def __unicode__(self):
+		return "%s:%s:%s" % (self.term_type_data__vocabulary_data.name, self.term_type_data.name, self.name)

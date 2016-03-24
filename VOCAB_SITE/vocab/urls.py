@@ -14,20 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.contrib import admin
-from django.contrib.auth import views as auth_views
+from django.views.generic import RedirectView
 
 from . import views
 
-app_name = 'vocab'
+# app_name = 'vocab'
+
 urlpatterns = [
-    url(r'^accounts/login/$', auth_views.login, name="login"),
-    url(r'^accounts/logout/$', views.logout_view, name="logout"),
-    url(r'^$', views.home, name="home"),
+    # redirect for just /vocab
+    url(r'^$', RedirectView.as_view(url='/')),    
+
     url(r'^adminIRIs$', views.adminIRIs, name="adminIRIs"),
     url(r'^createIRI$', views.createIRI, name="createIRI"),
     url(r'^createUser$', views.createUser, name="createUser"),
-    # url(r'^createVocab$', views.createVocab, name="createVocab"),
+    url(r'^createVocab$', views.createVocab, name="createVocab"),
     url(r'^searchResults$', views.searchResults, name="searchResults"),
     url(r'^iriCreationResults$', views.iriCreationResults, name="iriCreationResults"),
     url(r'^userProfile$', views.userProfile, name="userProfile"),
